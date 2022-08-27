@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"math/rand"
 	"time"
 	"unicode"
@@ -16,6 +17,7 @@ var dictionary = []string{
 	"Estados Unidos",
 	"Mexico",
 	"Telegrama",
+	"Minimo",
 }
 
 func main() {
@@ -25,7 +27,8 @@ func main() {
 	guessedLetters := initializeGuessedWorlds(targetWord)
 
 	//fmt.Println(targetWord)
-
+	guessedLetters['s'] = true
+	guessedLetters['i'] = true
 	printGameState(targetWord, guessedLetters)
 
 }
@@ -51,4 +54,28 @@ func printGameState(targetWorld string, guessedLetters map[rune]bool) {
 		fmt.Print(" ")
 	}
 	fmt.Println()
+	fmt.Println()
+	fmt.Println(getHangmanDrawing(5))
+}
+func getWorldGuesseingProgress(targetWord string, guessedLetters map[rune]bool) string {
+	result := ""
+	for _, ch := range targetWord {
+		if ch == ' ' { //si el caracter es un espacio entonces añadimos un espacio
+			result += " "
+		} else if guessedLetters[unicode.ToLower(ch)] == true { // unicode.ToLower is for converting characters from capital letter to lower
+			result += fmt.Sprintf("%c", ch)
+		} else {
+			result += "_"
+		}
+		result += " "
+	}
+	return result
+}
+
+func getHangmanDrawing(hangmanState int) string {
+	data, err := ioutil.ReadFile("states/hangman6")
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
 }
